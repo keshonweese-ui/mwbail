@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>عراق موبايل - متجر الهواتف الذكية في العراق</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&display=swap');
+        
+        body {
+            font-family: 'Tajawal', sans-serif;
+        }
+        
+        .discount-badge {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background-color: #ef4444;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+        
+        .cart-item-enter {
+            opacity: 0;
+            transform: translateX(20px);
+        }
+        
+        .cart-item-enter-active {
+            opacity: 1;
+            transform: translateX(0);
+            transition: all 300ms ease-in;
+        }
+        
+        .cart-item-exit {
+            opacity: 1;
+        }
+        
+        .cart-item-exit-active {
+            opacity: 0;
+            transform: translateX(20px);
+            transition: all 300ms ease-in;
+        }
+        
+        .rtl {
+            direction: rtl;
+        }
+        
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 4px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 rtl">
+    <!-- Header -->
+    <header class="bg-white shadow-sm sticky top-0 z-50">
+        <div class="container mx-auto px-4 py-3">
+            <div class="flex items-center justify-between">
+                <!-- Logo -->
+                <div class="flex items-center">
+                    <a href="#" class="text-2xl font-bold text-blue-600 flex items-center">
+                        <i class="fas fa-mobile-alt mr-2"></i>
+                        <span>عراق موبايل</span>
+                    </a>
+                </div>
+                
+                <!-- Search Bar -->
+                <div class="hidden md:flex flex-1 mx-8">
+                    <div class="relative w-full max-w-xl">
+                        <input type="text" placeholder="ابحث عن هاتفك المفضل..." 
+                               class="w-full py-2 px-4 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        <button class="absolute left-0 top-0 h-full px-4 text-gray-500">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Navigation and Cart -->
+                <div class="flex items-center space-x-6 space-x-reverse">
+                    <nav class="hidden md:flex space-x-6 space-x-reverse">
+                        <a href="#" class="text-gray-700 hover:text-blue-600 font-medium">الرئيسية</a>
+                        <a href="#" class="text-gray-700 hover:text-blue-600 font-medium">الهواتف</a>
+                        <a href="#" class="text-gray-700 hover:text-blue-600 font-medium">الاكسسوارات</a>
+                        <a href="#" class="text-gray-700 hover:text-blue-600 font-medium">عنا</a>
+                        <a href="#" class="text-gray-700 hover:text-blue-600 font-medium">اتصل بنا</a>
+                    </nav>
+                    
+                    <div class="flex items-center space-x-4 space-x-reverse">
+                        <button id="cart-toggle" class="relative text-gray-700 hover:text-blue-600">
+                            <i class="fas fa-shopping-cart text-xl"></i>
+                            <span id="cart-count" class="absolute -top-2 -right-2 bg-blue-600 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">0</span>
+                        </button>
+                        
+                        <button id="user-toggle" class="text-gray-700 hover:text-blue-600">
+                            <i class="fas fa-user-circle text-xl"></i>
+                        </button>
+                        
+                        <button id="mobile-menu-toggle" class="md:hidden text-gray-700 hover:text-blue-600">
+                            <i class="fas fa-bars text-xl"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Mobile Search (hidden on desktop) -->
+            <div class="mt-3 md:hidden">
+                <div class="relative w-full">
+                    <input type="text" placeholder="ابحث عن هاتفك المفضل..." 
+                           class="w-full py-2 px-4 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                    <button class="absolute left-0 top-0 h-full px-4 text-gray-500">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Mobile Menu (hidden by default) -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-gray-200">
+            <div class="container mx-auto px-4 py-3">
+                <nav class="flex flex-col space-y-3">
+                    <a href="#" class="text-gray-700 hover:text-blue-600 font-medium py-1">الرئيسية</a>
+                    <a href="#" class="text-gray-700 hover:text-blue-600 font-medium py-1">الهواتف</a>
+                    <a href="#" class="text-gray-700 hover:text-blue-600 font-medium py-1">الاكسسوارات</a>
+                    <a href="#" class="text-gray-700 hover:text-blue-600 font-medium py-1">عنا</a>
+                    <a href="#" class="text-gray-700 hover:text-blue-600 font-medium py-1">اتصل بنا</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="bg-gradient-to-r from-blue-600 to-blue-800 text-white py-16">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row items-center">
+                <div class="md:w-1/2 mb-8 md:mb-0">
+                    <h1 class="text-4xl md:text-5xl font-bold mb-4">أحدث الهواتف بأسعار تنافسية</h1>
+                    <p class="text-xl mb-6">اكتشف أحدث عروضنا على الهواتف الذكية والاكسسوارات مع توصيل سريع لكافة أنحاء العراق</p>
+                    <div class="flex space-x-4 space-x-reverse">
+                        <a href="#" class="bg-white text-blue-600 px-6 py-3 rounded-lg font-bold hover:bg-gray-100 transition duration-300">تسوق الآن</a>
+                        <a href="#" class="border border-white text-white px-6 py-3 rounded-lg font-bold hover:bg-white hover:text-blue-600 transition duration-300">عروض اليوم</a>
+                    </div>
+                </div>
+                <div class="md:w-1/2 flex justify-center">
+                    <img src="https://via.placeholder.com/500x300" alt="هواتف ذكية" class="rounded-lg shadow-xl w-full max-w-md">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Categories Section -->
+    <section class="py-12 bg-white">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center mb-12">تصفح حسب الفئة</h2>
+            
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+                <a href="#" class="bg-gray-100 rounded-lg p-6 text-center hover:bg-blue-50 transition duration-300 border border-gray-200 hover:border-blue-300">
+                    <div class="bg-blue-100 w-16 h-16 mx-auto rounded-full flex items-center justify-center mb-4">
+                        <i class="fas fa-mobile-alt text-blue-600 text-2xl"></i>
+                    </div>
+                    <h3 class="font-bold text-lg mb-2">الهواتف</h3>
+                    <p class="text-gray-600 text-sm">أحدث الموديلات</p>
+                </a>
+                
+                <a href="#" class="bg-gray-100 rounded-lg p-6 text-center hover:bg-blue-50 transition duration-300 border border-gray-200 hover:border-blue-300">
+                    <div class="bg-green-100 w-16 h-16 mx-auto rounded-full flex items-center justify-center mb-4">
+                        <i class="fas fa-tablet-alt text-green-600 text-2xl"></i>
+                    </div>
+                    <h3 class="font-bold text-lg mb-2">الأجهزة اللوحية</h3>
+                    <p class="text-gray-600 text-sm">أفضل الأجهزة</p>
+                </a>
+                
+                <a href="#" class="bg-gray-100 rounded-lg p-6 text-center hover:bg-blue-50 transition duration-300 border border-gray-200 hover:border-blue-300">
+                    <div class="bg-yellow-100 w-16 h-16 mx-auto rounded-full flex items-center justify-center mb-4">
+                        <i class="fas fa-headphones text-yellow-600 text-2xl"></i>
+                    </div>
+                    <h3 class="font-bold text-lg mb-2">السماعات</h3>
+                    <p class="text-gray-600 text-sm">جودة صوت عالية</p>
+                </a>
+                
+                <a href="#" class="bg-gray-100 rounded-lg p-6 text-center hover:bg-blue-50 transition duration-300 border border-gray-200 hover:border-blue-300">
+                    <div class="bg-purple-100 w-16 h-16 mx-auto rounded-full flex items-center justify-center mb-4">
+                        <i class="fas fa-battery-full text-purple-600 text-2xl"></i>
+                    </div>
+                    <h3 class="font-bold text-lg mb-2">الشواحن</h3>
+                    <p class="text-gray-600 text-sm">شحن سريع</p>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured Products -->
+    <section class="py-12 bg-gray-50">
+        <div class="container mx-auto px-4">
+            <div class="flex justify-between items-center mb-8">
+                <h2 class="text-3xl font-bold">الهواتف المميزة</h2>
+                <a href="#" class="text-blue-600 hover:text-blue-800 font-medium">عرض الكل <i class="fas fa-arrow-left mr-1"></i></a>
+            </div>
+            
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                <!-- Product 1 -->
+                <div class="bg-white rounded-lg overflow-hidden shadow-md product-card transition duration-300 relative">
+                    <div class="discount-badge">15% خصم</div>
+                    <div class="p-4">
+                        <img src="https://www2.0zz0.com/2025/07/29/23/701707100.jpeg" alt="iPhone 13 Pro" class="w-full h-48 object-contain">
+                    </div>
+                    <div class="p-4 border-t border-gray-100">
+                        <div class="flex justify-between items-start mb-2">
+                            <h3 class="font-bold text-lg">آيفون 13 برو</h3>
+                            <div class="flex items-center text-yellow-400">
+                                <i class="fas fa-star"></i>
+                                <span class="text-gray-600 text-sm mr-1">4.8</span>
+                            </div>
+                        </div>
+                        <p class="text-gray-600 text-sm mb-3">128GB - أزرق</p>
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <span class="text-gray-500 line-through text-sm">1,250,000 دينار</span>
+                                <p class="text-blue-600 font-bold">1,062,500 دينار</p>
+                            </div>
+                            <button class="add-to-cart bg-blue-600 text-white p-2 rounded-full hover:bg-blue-700 transition duration-300" data-id="1" data-name="آيفون 13 برو" data-price="1062500" data-image="https://via.placeholder.com/300x300">
+                                <i class="fas fa-cart-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Product 2 -->
+                <div class="bg-white rounded-lg overflow-hidden shadow-md product-card transition duration-300">
+                    <div class="p-4">
+                        <img src="https://via.placeholder.com/300x300" alt="Samsung Galaxy S22" class="w-full h-48 object-contain">
+                    </div>
+                    <div class="p-4 border-t border-gray-100">
+                        <div class="flex justify-between items-start mb-2">
+                            <h3 class="font-bold text-lg">سامسونج جالكسي S22</h3>
+                            <div class="flex items-center text-yellow-400">
+                                <i class="fas fa-star"></i>
+                                <span class="text-gray-600 text-sm mr-1">4.7</span>
+                            </div>
+                        </div>
+                        <p class="text-gray-600 text-sm mb-3">256GB - أسود</p>
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <p class="text-blue-600 font-bold">950,000 دينار</p>
+                            </div>
+                            <button class="add-to-cart bg-blue-600 text-white p-2 rounded-full hover:bg-blue-700 transition duration-300" data-id="2" data-name="سامسونج جالكسي S22" data-price="950000" data-image="https://via.placeholder.com/300x300">
+                                <i class="fas fa-cart-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Product 3 -->
+                <div class="bg-white rounded-lg overflow-hidden shadow-md product-card transition duration-300 relative">
+                    <div class="discount-badge">10% خصم</div>
+                    <div class="p-4">
+                        <img src="https://via.placeholder.com/300x300" alt="Xiaomi Redmi Note 11" class="w-full h-48 object-contain">
+                    </div>
+                    <div class="p-4 border-t border-gray-100">
+                        <div class="flex justify-between items-start mb-2">
+                            <h3 class="font-bold text-lg">شاومي ريدمي نوت 11</h3>
+                            <div class="flex items-center text-yellow-400">
+                                <i class="fas fa-star"></i>
+                                <span class="text-gray-600 text-sm mr-1">4.5</span>
+                            </div>
+                        </div>
+                        <p class="text-gray-600 text-sm mb-3">128GB - رمادي</p>
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <span class="text-gray-500 line-through text-sm">450,000 دينار</span>
+                                <p class="text-blue-600 font-bold">405,000 دينار</p>
+                            </div>
+                            <button class="add-to-cart bg-blue-600 text-white p-2 rounded-full hover:bg-blue-700 transition duration-300" data-id="3" data-name="شاومي ريدمي نوت 11" data-price="405000" data-image="https://via.placeholder.com/300x300">
+                                <i class="fas fa-cart-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Product 4 -->
+                <div class="bg-white rounded-lg overflow-hidden shadow-md product-card transition duration-300">
+                    <div class="p-4">
+                        <img src="https://via.placeholder.com/300x300" alt="Oppo Reno 7" class="w-full h-48 object-contain">
+                    </div>
+                    <div class="p-4 border-t border-gray-100">
+                        <div class="flex justify-between items-start mb-2">
+                            <h3 class="font-bold text-lg">أوبو رينو 7</h3>
+                            <div class="flex items-center text-yellow-400">
+                                <i class="fas fa-star"></i>
+                                <span class="text-gray-600 text-sm mr-1">4.3</span>
+                            </div>
+                        </div>
+                        <p class="text-gray-600 text-sm mb-3">256GB - أزرق</p>
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <p class="text-blue-600 font-bold">600,000 دينار</p>
+                            </div>
+                            <button class="add-to-cart bg-blue-600 text-white p-2 rounded-full hover:bg-blue-700 transition duration-300" data-id="4" data-name="أوبو رينو 7" data-price="600000" data-image="https://via.placeholder.com/300x300">
+                                <i class="fas fa-cart-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Offers Banner -->
+    <section class="py-8 bg-gradient-to-r from-red-600 to-red-800 text-white">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row items-center justify-between">
+                <div class="mb-4 md:mb-0">
+                    <h3 class="text-2xl font-bold mb-2">عروض خاصة لفترة محدودة!</h3>
+                    <p class="text-lg">خصومات تصل إلى 30% على مجموعة من الهواتف والاكسسوارات</p>
+                </div>
+                <div>
+                    <div class="flex items-center space-x-4 space-x-reverse">
+                        <div class="text-center">
+                            <div class="bg-black bg-opacity-30 rounded-lg px-4 py-2">
+                                <span class="text-2xl font-bold" id="days">00</span>
+                                <span class="block text-xs">أيام</span>
+                            </div>
+                        </div>
+                        <div class="text-center">
+                            <div class="bg-black bg-opacity-30 rounded-lg px-4 py-2">
+                                <span class="text-2xl font-bold" id="hours">00</span>
+                                <span class="block text-xs">ساعات</span>
+                            </div>
+                        </div>
+                        <div class="text-center">
+                            <div class="bg-black bg-opacity-30 rounded-lg px-4 py-2">
+                                <span class="text-2xl font-bold" id="minutes">00</span>
+                                <span class="block text-xs">دقائق</span>
+                            </div>
+                        </div>
+                        <div class="text-center">
+                            <div class="bg-black bg-opacity-30 rounded-lg px-4 py-2">
+                                <span class="text-2xl font-bold" id="seconds">00</span>
+                                <span class="block text-xs">ثواني</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <a href="#" class="mt-4 md:mt-0 bg-white text-red-600 px-6 py-3 rounded-lg font-bold hover:bg-gray-100 transition duration-300 whitespace-nowrap">استفد من العروض الآن</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Brands Section -->
+    <section class="py-12 bg-white">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center mb-12">أشهر الماركات</h2>
+            
+            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-8">
+                <div class="flex justify-center">
+                    <img src="https://via.placeholder.com/150x60?text=Apple" alt="Apple" class="h-12 object-contain opacity-70 hover:opacity-100 transition duration-300">
+                </div>
+                <div class="flex justify-center">
+                    <img src="https://via.placeholder.com/150x60?text=Samsung" alt="Samsung" class="h-12 object-contain opacity-70 hover:opacity-100 transition duration-300">
+                </div>
+                <div class="flex justify-center">
+                    <img src="https://via.placeholder.com/150x60?text=Xiaomi" alt="Xiaomi" class="h-12 object-contain opacity-70 hover:opacity-100 transition duration-300">
+                </div>
+                <div class="flex justify-center">
+                    <img src="https://via.placeholder.com/150x60?text=Oppo" alt="Oppo" class="h-12 object-contain opacity-70 hover:opacity-100 transition duration-300">
+                </div>
+                <div class="flex justify-center">
+                    <img src="https://via.placeholder.com/150x60?text=Huawei" alt="Huawei" class="h-12 object-contain opacity-70 hover:opacity-100 transition duration-300">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section class="py-12 bg-gray-50">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center mb-12">آراء عملائنا</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="bg-white p-6 rounded-lg shadow-sm">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 rounded-full bg-gray-200 overflow-hidden mr-4">
+                            <img src="https://via.placeholder.com/100" alt="Customer" class="w-full h-full object-cover">
+                        </div>
+                        <div>
+                            <h4 class="font-bold">أحمد محمد</h4>
+                            <div class="flex text-yellow-400">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="text-gray-600">"اشتريت هاتف آيفون 13 برو من الموقع وكانت تجربة رائعة. التوصيل كان سريعًا والهاتف أصلي تمامًا كما وصف. شكرًا لكم!"</p>
+                </div>
+                
+                <div class="bg-white p-6 rounded-lg shadow-sm">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 rounded-full bg-gray-200 overflow-hidden mr-4">
+                            <img src="https://via.placeholder.com/100" alt="Customer" class="w-full h-full object-cover">
+                        </div>
+                        <div>
+                            <h4 class="font-bold">سارة علي</h4>
+                            <div class="flex text-yellow-400">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star-half-alt"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="text-gray-600">"خدمة عملاء ممتازة وسرعة في الرد على الاستفسارات. الهاتف وصل خلال يومين فقط إلى بغداد. بالتأكيد سأتعامل معكم مرة أخرى."</p>
+                </div>
+                
+                <div class="bg-white p-6 rounded-lg shadow-sm">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 rounded-full bg-gray-200 overflow-hidden mr-4">
+                            <img src="https://via.placeholder.com/100" alt="Customer" class="w-full h-full object-cover">
+                        </div>
+                        <div>
+                            <h4 class="font-bold">علي حسين</h4>
+                            <div class="flex text-yellow-400">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="text-gray-600">"الأسعار تنافسية جدًا مقارنة بالسوق المحلي. اشتريت هاتف سامسونج مع سماعات بسعر ممتاز. شكرًا لكم على الخصومات والعروض."</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Newsletter -->
+    <section class="py-12 bg-blue-600 text-white">
+        <div class="container mx-auto px-4 text-center">
+            <h2 class="text-3xl font-bold mb-4">اشترك في نشرتنا البريدية</h2>
+            <p class="text-xl mb-8 max-w-2xl mx-auto">احصل على آخر العروض والتخفيضات مباشرة إلى بريدك الإلكتروني</p>
+            
+            <div class="flex flex-col sm:flex-row justify-center max-w-xl mx-auto">
+                <input type="email" placeholder="بريدك الإلكتروني" class="px-4 py-3 rounded-lg sm:rounded-r-none w-full focus:outline-none text-gray-900">
+                <button class="mt-2 sm:mt-0 bg-blue-800 px-6 py-3 rounded-lg sm:rounded-l-none font-bold hover:bg-blue-900 transition duration-300 whitespace-nowrap">اشترك الآن</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white pt-12 pb-6">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+                <div>
+                    <h3 class="text-xl font-bold mb-4 flex items-center">
+                        <i class="fas fa-mobile-alt mr-2"></i>
+                        <span>عراق موبايل</span>
+                    </h3>
+                    <p class="text-gray-400 mb-4">متجرك الأول لشراء الهواتف الذكية والأجهزة اللوحية في العراق. نقدم أفضل المنتجات بأسعار تنافسية.</p>
+                    <div class="flex space-x-4 space-x-reverse">
+                        <a href="#" class="text-gray-400 hover:text-white transition duration-300">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition duration-300">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition duration-300">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition duration-300">
+                            <i class="fab fa-telegram"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <div>
+                    <h3 class="text-lg font-bold mb-4">روابط سريعة</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white transition duration-300">الرئيسية</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition duration-300">منتجاتنا</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition duration-300">عروض خاصة</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition duration-300">الماركات</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition duration-300">مدونة</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3 class="text-lg font-bold mb-4">خدمة العملاء</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white transition duration-300">حسابي</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition duration-300">تتبع الطلب</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition duration-300">سياسة الإرجاع</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition duration-300">الأسئلة الشائعة</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition duration-300">اتصل بنا</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3 class="text-lg font-bold mb-4">معلومات الاتصال</h3>
+                    <ul class="space-y-2">
+                        <li class="flex items-start">
+                            <i class="fas fa-map-marker-alt mt-1 mr-2 text-blue-400"></i>
+                            <span class="text-gray-400">بغداد، المنصور، شارع 14 رمضان</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-phone-alt mr-2 text-blue-400"></i>
+                            <span class="text-gray-400">+964 771 123 4567</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-envelope mr-2 text-blue-400"></i>
+                            <span class="text-gray-400">info@iraqmobile.com</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-clock mr-2 text-blue-400"></i>
+                            <span class="text-gray-400">الأحد - الخميس: 9 صباحًا - 5 مساءً</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-800 pt-6 flex flex-col md:flex-row justify-between items-center">
+                <p class="text-gray-400 text-sm mb-4 md:mb-0">© 2023 عراق موبايل. جميع الحقوق محفوظة.</p>
+                <div class="flex space-x-6 space-x-reverse">
+                    <img src="https://via.placeholder.com/50x30?text=Visa" alt="Visa" class="h-8 object-contain opacity-80">
+                    <img src="https://via.placeholder.com/50x30?text=Mastercard" alt="Mastercard" class="h-8 object-contain opacity-80">
+                    <img src="https://via.placeholder.com/50x30?text=ZainCash" alt="ZainCash" class="h-8 object-contain opacity-80">
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Shopping Cart Sidebar -->
+    <div id="cart-sidebar" class="fixed top-0 right-0 h-full w-full md:w-96 bg-white shadow-lg transform translate-x-full transition-transform duration-300 ease-in-out z-50 overflow-y-auto">
+        <div class="p-4 border-b border-gray-200 flex justify-between items-center">
+            <h3 class="text-xl font-bold flex items-center">
+                <i class="fas fa-shopping-cart mr-2"></i>
+                <span>سلة التسوق</span>
+                <span id="sidebar-cart-count" class="bg-blue-600 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center mr-2">0</span>
+            </h3>
+            <button id="cart-close" class="text-gray-500 hover:text-gray-700">
+                <i class="fas fa-times text-xl"></i>
+            </button>
+        </div>
+        
+        <div id="cart-items" class="p-4">
+            <!-- Cart items will be added here dynamically -->
+            <div id="empty-cart-message" class="text-center py-8">
+                <i class="fas fa-shopping-cart text-4xl text-gray-300 mb-4"></i>
+                <p class="text-gray-500">سلة التسوق فارغة</p>
+                <a href="#" class="mt-4 inline-block bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition duration-300">تسوق الآن</a>
+            </div>
+        </div>
+        
+        <div class="p-4 border-t border-gray-200">
+            <div class="flex justify-between mb-2">
+                <span class="text-gray-600">المجموع:</span>
+                <span id="cart-subtotal" class="font-bold">0 دينار</span>
+            </div>
+            <div class="flex justify-between mb-4">
+                <span class="text-gray-600">التوصيل:</span>
+                <span class="font-bold">10,000 دينار</span>
+            </div>
+            <div class="flex justify-between text-lg mb-6">
+                <span class="font-bold">الإجمالي:</span>
+                <span id="cart-total" class="font-bold text-blue-600">0 دينار</span>
+            </div>
+            <a href="#" class="block bg-blue-600 text-white text-center py-3 rounded-lg font-bold hover:bg-blue-700 transition duration-300 mb-2">إتمام الشراء</a>
+            <a href="#" class="block border border-blue-600 text-blue-600 text-center py-3 rounded-lg font-bold hover:bg-blue-50 transition duration-300">متابعة التسوق</a>
+        </div>
+    </div>
+
+    <!-- User Dropdown (hidden by default) -->
+    <div id="user-dropdown" class="hidden absolute right-4 mt-2 w-48 bg-white rounded-md shadow-lg z-50">
+        <div class="py-1">
+            <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">حسابي</a>
+            <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">طلباتي</a>
+            <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">المفضلة</a>
+            <div class="border-t border-gray-200"></div>
+            <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">تسجيل خروج</a>
+        </div>
+    </div>
+
+    <!-- Backdrop (hidden by default) -->
+    <div id="backdrop" class="hidden fixed inset-0 bg-black bg-opacity-50 z-40"></div>
+
+    <script>
+        // Mobile Menu Toggle
+        const mobileMenuToggle = document.getElementById('mobile-menu-toggle');
+        const mobileMenu = document.getElementById('mobile-menu');
+        
+        mobileMenuToggle.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+        
+        // Cart Toggle
+        const cartToggle = document.getElementById('cart-toggle');
+        const cartSidebar = document.getElementById('cart-sidebar');
+        const cartClose = document.getElementById('cart-close');
+        const backdrop = document.getElementById('backdrop');
+        
+        cartToggle.addEventListener('click', () => {
+            cartSidebar.classList.remove('translate-x-full');
+            backdrop.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        });
+        
+        cartClose.addEventListener('click', () => {
+            cartSidebar.classList.add('translate-x-full');
+            backdrop.classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        });
+        
+        backdrop.addEventListener('click', () => {
+            cartSidebar.classList.add('translate-x-full');
+            backdrop.classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        });
+        
+        // User Dropdown Toggle
+        const userToggle = document.getElementById('user-toggle');
+        const userDropdown = document.getElementById('user-dropdown');
+        
+        userToggle.addEventListener('click', (e) => {
+            e.stopPropagation();
+            userDropdown.classList.toggle('hidden');
+        });
+        
+        // Close dropdown when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!userDropdown.contains(e.target) && e.target !== userToggle) {
+                userDropdown.classList.add('hidden');
+            }
+        });
+        
+        // Shopping Cart Functionality
+        let cart = [];
+        
+        // Add to cart buttons
+        const addToCartButtons = document.querySelectorAll('.add-to-cart');
+        
+        addToCartButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const id = button.getAttribute('data-id');
+                const name = button.getAttribute('data-name');
+                const price = parseInt(button.getAttribute('data-price'));
+                const image = button.getAttribute('data-image');
+                
+                // Check if item already exists in cart
+                const existingItem = cart.find(item => item.id === id);
+                
+                if (existingItem) {
+                    existingItem.quantity += 1;
+                } else {
+                    cart.push({
+                        id,
+                        name,
+                        price,
+                        image,
+                        quantity: 1
+                    });
+                }
+                
+                updateCart();
+                
+                // Show cart sidebar
+                cartSidebar.classList.remove('translate-x-full');
+                backdrop.classList.remove('hidden');
+                document.body.style.overflow = 'hidden';
+                
+                // Animation feedback
+                button.innerHTML = '<i class="fas fa-check"></i>';
+                setTimeout(() => {
+                    button.innerHTML = '<i class="fas fa-cart-plus"></i>';
+                }, 1000);
+            });
+        });
+        
+        // Update cart function
+        function updateCart() {
+            const cartCount = document.getElementById('cart-count');
+            const sidebarCartCount = document.getElementById('sidebar-cart-count');
+            const cartItemsContainer = document.getElementById('cart-items');
+            const emptyCartMessage = document.getElementById('empty-cart-message');
+            const cartSubtotal = document.getElementById('cart-subtotal');
+            const cartTotal = document.getElementById('cart-total');
+            
+            // Update cart count
+            const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+            cartCount.textContent = totalItems;
+            sidebarCartCount.textContent = totalItems;
+            
+            // Update cart items
+            if (cart.length === 0) {
+                emptyCartMessage.classList.remove('hidden');
+                cartItemsContainer.innerHTML = '';
+            } else {
+                emptyCartMessage.classList.add('hidden');
+                
+                let cartItemsHTML = '';
+                
+                cart.forEach(item => {
+                    cartItemsHTML += `
+                        <div class="flex items-center py-4 border-b border-gray-200 cart-item">
+                            <div class="w-16 h-16 bg-gray-100 rounded-lg overflow-hidden mr-4">
+                                <img src="${item.image}" alt="${item.name}" class="w-full h-full object-contain">
+                            </div>
+                            <div class="flex-1">
+                                <h4 class="font-medium">${item.name}</h4>
+                                <div class="flex justify-between items-center mt-1">
+                                    <span class="text-blue-600 font-bold">${item.price.toLocaleString()} دينار</span>
+                                    <div class="flex items-center">
+                                        <button class="decrease-quantity w-8 h-8 flex items-center justify-center border border-gray-300 rounded-lg mr-1" data-id="${item.id}">
+                                            <i class="fas fa-minus text-xs"></i>
+                                        </button>
+                                        <span class="quantity w-8 text-center">${item.quantity}</span>
+                                        <button class="increase-quantity w-8 h-8 flex items-center justify-center border border-gray-300 rounded-lg mr-1" data-id="${item.id}">
+                                            <i class="fas fa-plus text-xs"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <button class="remove-item ml-4 text-gray-400 hover:text-red-500" data-id="${item.id}">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                    `;
+                });
+                
+                cartItemsContainer.innerHTML = cartItemsHTML;
+                
+                // Add event listeners to quantity buttons
+                document.querySelectorAll('.increase-quantity').forEach(button => {
+                    button.addEventListener('click', () => {
+                        const id = button.getAttribute('data-id');
+                        const item = cart.find(item => item.id === id);
+                        if (item) {
+                            item.quantity += 1;
+                            updateCart();
+                        }
+                    });
+                });
+                
+                document.querySelectorAll('.decrease-quantity').forEach(button => {
+                    button.addEventListener('click', () => {
+                        const id = button.getAttribute('data-id');
+                        const item = cart.find(item => item.id === id);
+                        if (item && item.quantity > 1) {
+                            item.quantity -= 1;
+                            updateCart();
+                        }
+                    });
+                });
+                
+                document.querySelectorAll('.remove-item').forEach(button => {
+                    button.addEventListener('click', () => {
+                        const id = button.getAttribute('data-id');
+                        cart = cart.filter(item => item.id !== id);
+                        updateCart();
+                    });
+                });
+            }
+            
+            // Update totals
+            const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            const deliveryFee = 10000;
+            const total = subtotal + deliveryFee;
+            
+            cartSubtotal.textContent = subtotal.toLocaleString() + ' دينار';
+            cartTotal.textContent = total.toLocaleString() + ' دينار';
+        }
+        
+        // Countdown Timer
+        function updateCountdown() {
+            const now = new Date();
+            const endOfDay = new Date();
+            endOfDay.setHours(23, 59, 59, 999);
+            
+            const diff = endOfDay - now;
+            
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+            
+            document.getElementById('days').textContent = days.toString().padStart(2, '0');
+            document.getElementById('hours').textContent = hours.toString().padStart(2, '0');
+            document.getElementById('minutes').textContent = minutes.toString().padStart(2, '0');
+            document.getElementById('seconds').textContent = seconds.toString().padStart(2, '0');
+        }
+        
+        // Update countdown every second
+        updateCountdown();
+        setInterval(updateCountdown, 1000);
+    </script>
+</body>
+</html>
